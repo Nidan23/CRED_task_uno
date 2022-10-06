@@ -8,8 +8,8 @@ import java.io.*;
 public class FileService {
     private static FileService instance;
     private final String extensionNotSupportedError = "Extension not supported";
-    private final String extensionFake = "Extension is fake";
-    private final String fileDoesNotExists = "File doesn't exists";
+    private final String extensionFakeError = "Extension is fake";
+    private final String fileDoesNotExistsError = "File doesn't exists";
 
     private FileService() {}
 
@@ -24,14 +24,14 @@ public class FileService {
         File file = new File(path);
 
         if (!file.exists() || !file.isFile() || !file.canRead())
-            return fileDoesNotExists;
+            throw new FileNotFoundException(fileDoesNotExistsError);
 
         String[] pathFragments = file.getPath().split("\\.");
         String extension = pathFragments[pathFragments.length - 1].toLowerCase();
         byte[] bytes = getBytes(file);
 
         if (bytes.length == 0)
-            return extensionFake;
+            throw new RuntimeException(this.extensionFakeError);
 
         return validateFileExtension(extension, bytes);
     }
